@@ -1,4 +1,6 @@
-# SIBR25_discourse
+# SIBR 2025
+### Public Discourse in Online Environments
+
 This repository contains materials for a workshop to explore public discourse in online environments 
 
-\[[**.html**](https://raw.githack.com/SIBR25_discourse/code/main/SIBR_tut.html) | [**.qmd**](https://github.com/SIBR25_discourse/code/blob/main/SIBR_tut.qmd)\]
+\[[**.html**](https://raw.githack.com/lfoswald/SIBR25_discourse/blob/main/code/SIBR_tut.html) | [**.qmd**](https://github.com/SIBR25_discourse/blob/main/code/SIBR_tut.qmd)\]
