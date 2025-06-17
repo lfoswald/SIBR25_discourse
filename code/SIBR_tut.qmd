@@ -67,9 +67,11 @@ password <- "your_password"
 
 4.  Use the `httr` package to authenticate and make requests. This is the standard "raw" way how to query APIs using html GET and SET requests. 
 
-``` r
+```r
 # Load credentials from authenticate.R
 source("authenticate.R")
+
+library(httr)
 
 # Obtain OAuth token
 response <- POST("https://www.reddit.com/api/v1/access_token",
@@ -85,9 +87,7 @@ headers <- add_headers(Authorization = paste("bearer", token))
 
 For this tutorial, we will fetch posts and comments from the subreddit `r/politics`. If you inspect the output, you'll see that content from a raw GET request looks pretty messy and requires significant parsing...
 
-``` r
-library(httr)
-
+```r
 # Fetch recent posts from r/politics
 url <- "https://oauth.reddit.com/r/politics/hot"
 response <- GET(url, headers)
@@ -113,13 +113,25 @@ posts <- threads_content$threads
 
 comments <- threads_content$comments
 #write_csv(comments, "../data/comments.csv")
+
+# Hash usernames
+library(digest)
+
+hash_username <- function(usernames) {
+  sapply(usernames, function(x) digest(x, algo = "sha256"))
+}
+
+posts$author <- hash_username(posts$author)
+comments$author <- hash_username(comments$author)
+#write_csv(posts, "../data/posts_hashed.csv")
+#write_csv(comments, "../data/comments_hashed.csv")
 ```
 
 In case you got stuck along the way - you can work with the posts and comments I collected.
 
 ```{r}
-posts <- read.csv("../data/posts.csv")
-comments <- read.csv("../data/comments.csv")
+posts <- read.csv("../data/posts_hashed.csv")
+comments <- read.csv("../data/comments_hashed.csv")
 ```
 
 
@@ -248,8 +260,9 @@ top_terms %>%
        x = NULL, y = "Beta")+
   theme_bw()
 ```
+The plot shows the 10 words most representative for each topic. The beta values are the probabilities of a term being associated with a specific topic.
 
-What could these topics be? Does the result make sense to you?
+What could these topics be? Do the results make sense to you? 🤔
 
 These simple, out-of-the-box approaches may not answer the core questions you're interested in. Fortunately, **LLMs** enable a whole new level of content analysis using approaches that get pretty close to human annotation [(Gilardi et al., 2023)](https://www.pnas.org/doi/10.1073/pnas.2305016120).
 
